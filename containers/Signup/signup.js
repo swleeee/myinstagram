@@ -8,6 +8,36 @@ import AppImg1 from '../../public/static/images/App1.png';
 import AppImg2 from '../../public/static/images/App2.png';
 
 function signin(props) {
+  const signupHandler = () => {
+    console.log('click');
+
+    const textbox = {
+      userInfo: '22233334444',
+      userName: '권선구',
+      userId: 'bbb',
+      password: 'sdfsdfsdff',
+    };
+
+    fetch('http://localhost:3003/signup', {
+      method: 'POST', //통신방법
+      headers: {
+        'content-type': 'application/json',
+        // 'Access-Control-Allow-Origin': {
+        //   type: 'string',
+        // },
+        'Access-Control-Allow-Origin': '*',
+      },
+
+      body: JSON.stringify(textbox),
+    });
+    // .then((res) => res.json())
+    // .then((json) => {
+    //   console.log(json);
+    //   // this.setState({
+    //   //   text: json.text,
+    //   // });
+    // });
+  };
   return (
     <Container>
       <MainBox>
@@ -33,7 +63,7 @@ function signin(props) {
           <input placeholder="사용자 이름" />
           <input placeholder="비밀번호" />
           <SignUp>
-            <Register>가입</Register>
+            <Register onClick={() => signupHandler()}>가입</Register>
 
             {/* <Forget>비밀번호를 잊으셨나요?</Forget> */}
           </SignUp>
