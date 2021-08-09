@@ -3,40 +3,46 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import facebookImg from '../../public/static/images/facebook.png';
+import facebookImg from '../../public/static/images/signup/facebook_white.png';
 import AppImg1 from '../../public/static/images/App1.png';
 import AppImg2 from '../../public/static/images/App2.png';
 
-function login(props) {
+function signin(props) {
   return (
     <Container>
       <MainBox>
         <Logo>Instagram</Logo>
-        {/* <Description>친구들의 사진과 동영상을 보려면 가입하세요</Description> */}
-        <MainItem>
-          <input placeholder="전화번호, 사용자 이름 또는 이메일" />
-          <input placeholder="비밀번호" />
-          <SignIn>
-            <Login>로그인</Login>
-            <Or>
-              {' '}
-              <div></div>
-              <span>또는</span>
-              <div></div>{' '}
-            </Or>
-            <Facebook>
-              <Img src={facebookImg} width={18} height={18} />
 
-              <span>Facebook으로 로그인</span>
-            </Facebook>
-            <Forget>비밀번호를 잊으셨나요?</Forget>
-          </SignIn>
+        <MainItem>
+          <Description>친구들의 사진과 동영상을 보려면 가입하세요</Description>
+
+          <Facebook>
+            <Img src={facebookImg} width={18} height={18} />
+
+            <span>Facebook으로 로그인</span>
+          </Facebook>
+          <Or>
+            {' '}
+            <div></div>
+            <span>또는</span>
+            <div></div>{' '}
+          </Or>
+
+          <input placeholder="휴대폰 번호 또는 이메일 주소" />
+          <input placeholder="성명" />
+          <input placeholder="사용자 이름" />
+          <input placeholder="비밀번호" />
+          <SignUp>
+            <Register>가입</Register>
+
+            {/* <Forget>비밀번호를 잊으셨나요?</Forget> */}
+          </SignUp>
         </MainItem>
       </MainBox>
       <SubBox>
-        <span>계정이 없으신가요?</span>
-        <Link href="/signup" passHref>
-          <SignUp href="/signup">가입하기</SignUp>
+        <span>계정이 있으신가요?</span>
+        <Link href="/" passHref>
+          <Login href="/">로그인</Login>
         </Link>
       </SubBox>
       <Footer>
@@ -54,7 +60,7 @@ function login(props) {
   );
 }
 
-export default login;
+export default signin;
 
 const Container = styled.div`
   display: flex;
@@ -64,7 +70,7 @@ const Container = styled.div`
   height: 100vh;
 `;
 const MainBox = styled.div`
-  width: 380px;
+  width: 350px;
   // height: 350px;
   display: flex;
   flex-direction: column;
@@ -86,7 +92,7 @@ const MainItem = styled.div`
   width: 80%;
   display: flex;
   flex-direction: column;
-  padding-top: 40px;
+  padding-top: 20px;
   box-sizing: border-box;
 
   > input {
@@ -103,22 +109,33 @@ const MainItem = styled.div`
 
     ::placeholder {
       font-size: 12px;
-      color: #aaaaaa;
+      color: #888888;
     }
   }
 
-  > input:nth-of-type(1) {
+  > input:nth-of-type(1),
+  input:nth-of-type(2),
+  input:nth-of-type(3) {
     margin-bottom: 8px;
   }
 `;
-const Description = styled.div``;
-const SignIn = styled.div`
+const Description = styled.div`
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 20px;
+  color: #8e8e8e;
+  text-align: center;
+  margin-bottom: 20px;
+  word-break: keep-all;
+`;
+const SignUp = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
-const Login = styled.button`
+const Register = styled.button`
   margin-top: 15px;
+  margin-bottom: 20px;
   width: 100%;
   background-color: #b2dffc;
   color: #ffffff;
@@ -128,7 +145,7 @@ const Login = styled.button`
 `;
 const Or = styled.div`
   width: 100%;
-  margin-top: 20px;
+  margin: 15px 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -150,13 +167,18 @@ const Or = styled.div`
 `;
 const Facebook = styled.div`
   display: flex;
-  margin: 25px 0;
+  justify-content: center;
+  align-items: center;
+  margin: 5px 0;
+  background-color: #0095f6;
+  border-radius: 5px;
+  height: 32px;
   > span {
     margin-left: 5px;
     font-size: 14px;
     font-weight: 600;
     line-height: 18px;
-    color: #385185;
+    color: #ffffff;
   }
 `;
 const Forget = styled.button`
@@ -170,7 +192,7 @@ const Forget = styled.button`
 `;
 const SubBox = styled.div`
   margin-top: 10px;
-  width: 380px;
+  width: 350px;
   // height: 350px;
   display: flex;
   justify-content: center;
@@ -187,7 +209,7 @@ const SubBox = styled.div`
   }
 `;
 
-const SignUp = styled.a`
+const Login = styled.a`
   font-size: 14px;
   font-weight: 600;
   line-height: 18px;
