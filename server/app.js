@@ -43,6 +43,17 @@ const express = require('express');
 const app = express();
 const PORT = 3003;
 const cors = require('cors');
+const mysql = require('mysql'); // << 새로 추가된 부분
+
+const db = mysql.createConnection({
+  /// 새로 추가된 부분
+  host: 'localhost',
+  user: 'lee', // mysql에 아이디를 넣는다.
+  password: '1234', // mysql의 비밀번호를 넣는다.
+  database: 'myinstagram', //위에서 만든 데이터베이스의 이름을 넣는다.
+});
+
+db.connect();
 
 app.use(cors());
 
@@ -62,6 +73,22 @@ app.get('/', (req, res) => {
 app.post('/signup', (req, res) => {
   console.log('111111');
   console.log(req.body);
+  const userInfo = req.body.userInfo;
+  const userName = req.body.userName;
+  const userId = req.body.userId;
+  const password = req.body.password;
+
+  db.query(
+    'insert into user (userInfo, userName, userId, password) values(?, ?, ?, ?)',
+    [userInfo, userName, userId, password]
+  ),
+    function (err, rows, fields) {
+      if (err) {
+        console.log('DB저장 실패');
+      } else {
+        console.log('DB저장 성공');
+      }
+    };
   //   const user_id = req.body.inText;
   //   console.log(user_id);
   //////query문 추가할 곳/////
