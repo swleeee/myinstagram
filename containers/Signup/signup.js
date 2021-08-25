@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,29 +8,69 @@ import AppImg1 from '../../public/static/images/App1.png';
 import AppImg2 from '../../public/static/images/App2.png';
 
 function signin(props) {
+  const [userInfo, setUserInfo] = useState();
+  const [userName, setUserName] = useState();
+  const [userId, setUserId] = useState();
+  const [password, setPassword] = useState();
+
+  const onChangeHandler = (data) => {
+    // console.log(e.target.value);
+
+    // console.log(data);
+    console.log(data.name);
+    console.log(data.value);
+    switch (data.name) {
+      case 'userInfo':
+        setUserInfo(data.value);
+        break;
+      case 'userName':
+        setUserName(data.value);
+        break;
+      case 'userId':
+        setUserId(data.value);
+        break;
+      case 'password':
+        setPassword(data.value);
+        break;
+    }
+    console.log(userInfo);
+  };
   const signupHandler = () => {
     console.log('click');
+    console.log(userInfo);
 
-    const textbox = {
-      userInfo: '22233334444',
-      userName: '권선구',
-      userId: 'bbb',
-      password: 'sdfsdfsdff',
+    // const textbox = {
+    //   userInfo: '22233334444',
+    //   userName: '권선구',
+    //   userId: 'bbb',
+    //   password: 'sdfsdfsdff',
+    // };
+
+    const user = {
+      userInfo: userInfo,
+      userName: userName,
+      userId: userId,
+      password: password,
     };
 
+    console.log(user);
     fetch('http://localhost:3003/signup', {
       method: 'POST', //통신방법
       headers: {
         'content-type': 'application/json',
-        // 'Access-Control-Allow-Origin': {
-        //   type: 'string',
-        // },
         'Access-Control-Allow-Origin': '*',
       },
-
-      body: JSON.stringify(textbox),
-    });
-    // .then((res) => res.json())
+      body: JSON.stringify(user),
+    })
+      .then((res) => {
+        res.json();
+        // console.log(res);
+      })
+      .then((res) => {
+        console.log('res');
+        console.log(res);
+      })
+      .catch((e) => console.log(e));
     // .then((json) => {
     //   console.log(json);
     //   // this.setState({
@@ -58,10 +98,27 @@ function signin(props) {
             <div></div>{' '}
           </Or>
 
-          <input placeholder="휴대폰 번호 또는 이메일 주소" />
-          <input placeholder="성명" />
-          <input placeholder="사용자 이름" />
-          <input placeholder="비밀번호" />
+          <input
+            placeholder="휴대폰 번호 또는 이메일 주소"
+            name="userInfo"
+            onChange={(e) => onChangeHandler(e.target)}
+          />
+
+          <input
+            placeholder="성명"
+            name="userName"
+            onChange={(e) => onChangeHandler(e.target)}
+          />
+          <input
+            placeholder="사용자 이름"
+            name="userId"
+            onChange={(e) => onChangeHandler(e.target)}
+          />
+          <input
+            placeholder="비밀번호"
+            name="password"
+            onChange={(e) => onChangeHandler(e.target)}
+          />
           <SignUp>
             <Register onClick={() => signupHandler()}>가입</Register>
 

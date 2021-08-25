@@ -70,28 +70,81 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
+function setUserInfo(userInfo, userName, userId, password, date, callback) {
+  db.query(
+    'insert into user (userInfo, userName, userId, password, createdDt) values(?, ?, ?, ?, ?)',
+    [userInfo, userName, userId, password, date]
+  ),
+    function (err, result) {
+      if (err) {
+        callback(err, null);
+      } else {
+        callback(null, result[0].hexcode);
+      }
+    };
+}
+
 app.post('/signup', (req, res) => {
-  console.log('111111');
+  // console.log('111111');
+  // console.log(req);
   console.log(req.body);
   const userInfo = req.body.userInfo;
   const userName = req.body.userName;
   const userId = req.body.userId;
   const password = req.body.password;
+  const date = new Date();
+  // console.log('222222');
+  let temp = 0;
+
+  // setUserInfo(userInfo, userName, userId, password, date, function (err, data) {
+  //   console.log('ccccccccccccccccc');
+  //   if (err) {
+  //     // error handling code goes here
+  //     console.log('ERROR : ', err);
+  //   } else {
+  //     // code to execute on data retrieval
+  //     console.log('result from db is : ', data);
+  //   }
+  // });
 
   db.query(
-    'insert into user (userInfo, userName, userId, password) values(?, ?, ?, ?)',
-    [userInfo, userName, userId, password]
-  ),
-    function (err, rows, fields) {
+    'insert into user (userInfo, userName, userId, password, createdDt) values(?, ?, ?, ?, ?)',
+    [userInfo, userName, userId, password, date],
+
+    function (err, results, fields) {
+      console.log(results);
+      // var rows = JSON.parse(JSON.stringify(results[0]));
+
+      // here you can access rows
+      // console.log(rows);
+      // console.log('=============================');
+
+      // if (err) {
+      //   console.error('One or more errors occurred!');
+      //   console.error(err);
+      //   return;
+      // }
+      // processResults(rows, fields);
+
+      // console.log(results);
+      // console.log(err);
+      // console.log('aaa');
       if (err) {
         console.log('DB저장 실패');
+        res.json({ data: 'fail' });
+        temp = 1;
       } else {
         console.log('DB저장 성공');
+        res.json({ data: 'success' });
+        temp = 2;
       }
-    };
+      db.end();
+    }
+  );
   //   const user_id = req.body.inText;
   //   console.log(user_id);
-  //////query문 추가할 곳/////
+  res.json({ data: 'ee' });
+  console.log(temp);
 });
 
 app.listen(PORT, () => {
