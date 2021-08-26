@@ -131,19 +131,22 @@ app.post('/signup', (req, res) => {
       // console.log('aaa');
       if (err) {
         console.log('DB저장 실패');
-        res.json({ data: 'fail' });
+
         temp = 1;
+        // db.end();
+        res.json({ data: 'fail' });
       } else {
         console.log('DB저장 성공');
-        res.json({ data: 'success' });
         temp = 2;
+        // db.end();
+        res.json({ data: 'success' });
       }
       db.end();
     }
   );
   //   const user_id = req.body.inText;
   //   console.log(user_id);
-  res.json({ data: 'ee' });
+  // res.json({ data: 'ee' });
   console.log(temp);
 });
 

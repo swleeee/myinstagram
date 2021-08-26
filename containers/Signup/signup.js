@@ -8,36 +8,148 @@ import AppImg1 from '../../public/static/images/App1.png';
 import AppImg2 from '../../public/static/images/App2.png';
 
 function signin(props) {
-  const [userInfo, setUserInfo] = useState();
-  const [userName, setUserName] = useState();
-  const [userId, setUserId] = useState();
-  const [password, setPassword] = useState();
+  // const [userInfo, setUserInfo] = useState();
+  // const [isUserInfo, setIsUserInfo] = useState(0);
+  // const [userName, setUserName] = useState();
+  // const [isUserName, setIsUserName] = useState(0);
+  // const [userId, setUserId] = useState();
+  // const [isUserId, setIsUserId] = useState(0);
+  // const [password, setPassword] = useState();
+  // const [isPassword, setIsPassword] = useState(0);
+
+  /* 
+    input box의 상태값 저장 
+    text : 어떤 종류의 input box인가
+    src : 올바르게 작성되었는지 확인하는 이미지의 주소 
+    value : input box에 작성된 text 값
+    isValue : 올바르게 작성되었다면 1(true), 아니면 0(false)
+  */
+  const [input, setInput] = useState([
+    {
+      index: 0,
+      text: 'userInfo',
+      src: '/static/images/signup/no.png',
+      value: '',
+      isValue: 0,
+    },
+    {
+      index: 1,
+      text: 'userName',
+      src: '/static/images/signup/no.png',
+      value: '',
+      isValue: 0,
+    },
+    {
+      index: 2,
+      text: 'userId',
+      src: '/static/images/signup/no.png',
+      value: '',
+      isValue: 0,
+    },
+    {
+      index: 3,
+      text: 'password',
+      src: '/static/images/signup/no.png',
+      value: '',
+      isValue: 0,
+    },
+  ]);
+
+  // 이메일 체크 정규식
+  const existEmail = (asValue) => {
+    var regExp =
+      /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+    console.log(regExp.test(asValue));
+    return regExp.test(asValue); // 형식에 맞는 경우 true 리턴
+  };
+
+  // 핸드폰 번호 체크 정규식
+  const existCelluar = (asValue) => {
+    var regExp = /^01(?:0|1|[6-9])(?:\d{3}|\d{4})\d{4}$/;
+    console.log(regExp.test(asValue));
+    return regExp.test(asValue); // 형식에 맞는 경우 true 리턴
+  };
+
+  const existUserId = (asValue) => {
+    var regExp = /^[A-Za-z0-9_.+]*$/;
+    console.log(regExp.test(asValue));
+    return regExp.test(asValue); // 형식에 맞는 경우 true 리턴
+  };
+
+  //비밀번호 체크 정규식
+  //조건1. 6~20 영문 대소문자
+  //조건2. 최소 1개의 숫자 혹은 특수 문자를 포함해야 함
+  const existPassword = (asValue) => {
+    var regExp = /^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{6,20}$/;
+    console.log(regExp.test(asValue));
+    return regExp.test(asValue); // 형식에 맞는 경우 true 리턴
+  };
 
   const onChangeHandler = (data) => {
-    // console.log(e.target.value);
+    console.log(input);
+    let newArray = [...input];
+    console.log(newArray);
 
-    // console.log(data);
-    console.log(data.name);
-    console.log(data.value);
-    switch (data.name) {
-      case 'userInfo':
-        setUserInfo(data.value);
-        break;
-      case 'userName':
-        setUserName(data.value);
-        break;
-      case 'userId':
-        setUserId(data.value);
-        break;
-      case 'password':
-        setPassword(data.value);
-        break;
-    }
-    console.log(userInfo);
+    /* 
+      input box의 값이 변경될 때마다 해당 값이 저장되고 정규식을 통해 검사하여 올바르게 작성되었는지 확인
+    */
+    input.map((item, idx) => {
+      if (data.name === item.text) {
+        newArray[idx].value = data.value;
+        if (idx === 0) {
+          newArray[idx].isValue =
+            existCelluar(data.value) || existEmail(data.value);
+        } else if (idx === 1) {
+          newArray[idx].isValue = data.value ? true : false;
+        } else if (idx === 2) {
+          newArray[idx].isValue = existUserId(data.value);
+        } else {
+          newArray[idx].isValue = existPassword(data.value);
+        }
+        if (newArray[idx].isValue) {
+          newArray[idx].src = '/static/images/signup/ok.png';
+        } else {
+          newArray[idx].src = '/static/images/signup/no.png';
+        }
+
+        setInput(newArray);
+      } else {
+        // setInput(item);
+      }
+    });
+
+    // switch (data.name) {
+    //   case 'userInfo':
+    //     setUserInfo(data.value);
+    //     // existCelluar(data.value);
+    //     // existEmail(data.value);
+    //     setIsUserInfo(existCelluar(data.value) || existEmail(data.value));
+    //     changeImage(0);
+    //     setSrc();
+    //     break;
+    //   case 'userName':
+    //     setUserName(data.value);
+    //     break;
+    //   case 'userId':
+    //     setUserId(data.value);
+    //     existUserId(data.value);
+    //     break;
+    //   case 'password':
+    //     setPassword(data.value);
+    //     existPassword(data.value);
+    //     break;
+    // }
+    // console.log(data.value);
+    // console.log(isUserInfo);
+    // // console.log(src[3]);
+    // setTimeout(() => {
+    //   console.log(isUserInfo);
+    // }, 3000);
   };
   const signupHandler = () => {
     console.log('click');
-    console.log(userInfo);
+    // console.log(userInfo);
+    console.log(input);
 
     // const textbox = {
     //   userInfo: '22233334444',
@@ -46,37 +158,19 @@ function signin(props) {
     //   password: 'sdfsdfsdff',
     // };
 
-    const user = {
-      userInfo: userInfo,
-      userName: userName,
-      userId: userId,
-      password: password,
-    };
+    // const user = {
+    //   userInfo: userInfo,
+    //   userName: userName,
+    //   userId: userId,
+    //   password: password,
+    // };
 
-    console.log(user);
-    fetch('http://localhost:3003/signup', {
-      method: 'POST', //통신방법
-      headers: {
-        'content-type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-      body: JSON.stringify(user),
-    })
-      .then((res) => {
-        res.json();
-        // console.log(res);
-      })
-      .then((res) => {
-        console.log('res');
-        console.log(res);
-      })
-      .catch((e) => console.log(e));
-    // .then((json) => {
-    //   console.log(json);
-    //   // this.setState({
-    //   //   text: json.text,
-    //   // });
-    // });
+    const user = {
+      userInfo: input[0].value,
+      userName: input[1].value,
+      userId: input[2].value,
+      password: input[3].value,
+    };
   };
   return (
     <Container>
@@ -98,27 +192,73 @@ function signin(props) {
             <div></div>{' '}
           </Or>
 
-          <input
-            placeholder="휴대폰 번호 또는 이메일 주소"
-            name="userInfo"
-            onChange={(e) => onChangeHandler(e.target)}
-          />
+          <Input value={userInfo} check={isUserInfo}>
+            <input
+              placeholder="휴대폰 번호 또는 이메일 주소"
+              name="userInfo"
+              onChange={(e) => onChangeHandler(e.target)}
+              // value="휴대폰 번호 또는 이메일 주소"
+            />
+            <div>휴대폰 번호 또는 이메일 주소</div>
+            <div>
+              <InnerImg
+                check={isUserInfo}
+                src={input[0].src}
+                width={22}
+                height={22}
+              />
+            </div>
+          </Input>
 
-          <input
-            placeholder="성명"
-            name="userName"
-            onChange={(e) => onChangeHandler(e.target)}
-          />
-          <input
-            placeholder="사용자 이름"
-            name="userId"
-            onChange={(e) => onChangeHandler(e.target)}
-          />
-          <input
-            placeholder="비밀번호"
-            name="password"
-            onChange={(e) => onChangeHandler(e.target)}
-          />
+          <Input value={userName}>
+            <input
+              placeholder="성명"
+              name="userName"
+              onChange={(e) => onChangeHandler(e.target)}
+            />
+            <div>성명</div>
+            <div>
+              <InnerImg
+                check={isUserInfo}
+                src={input[1].src}
+                width={22}
+                height={22}
+              />
+            </div>
+          </Input>
+          <Input value={userId}>
+            <input
+              placeholder="사용자 이름"
+              name="userId"
+              onChange={(e) => onChangeHandler(e.target)}
+            />
+            <div>사용자 이름</div>
+            <div>
+              <InnerImg
+                check={isUserInfo}
+                src={input[2].src}
+                width={22}
+                height={22}
+              />
+            </div>
+          </Input>
+          <Input value={password}>
+            <input
+              placeholder="비밀번호"
+              name="password"
+              onChange={(e) => onChangeHandler(e.target)}
+              type="password"
+            />
+            <div>비밀번호</div>
+            <div>
+              <InnerImg
+                check={isUserInfo}
+                src={input[3].src}
+                width={22}
+                height={22}
+              />
+            </div>
+          </Input>
           <SignUp>
             <Register onClick={() => signupHandler()}>가입</Register>
 
@@ -181,30 +321,7 @@ const MainItem = styled.div`
   flex-direction: column;
   padding-top: 20px;
   box-sizing: border-box;
-
-  > input {
-    font-size: 16px;
-    background-color: #fafafa;
-    color: #262626;
-    border: 1px solid #cccccc;
-    padding: 9px 0 7px 8px;
-    box-sizing: border-box;
-
-    :focus {
-      outline: none;
-    }
-
-    ::placeholder {
-      font-size: 12px;
-      color: #888888;
-    }
-  }
-
-  > input:nth-of-type(1),
-  input:nth-of-type(2),
-  input:nth-of-type(3) {
-    margin-bottom: 8px;
-  }
+  position: relative;
 `;
 const Description = styled.div`
   font-size: 17px;
@@ -251,6 +368,68 @@ const Or = styled.div`
     line-height: 15px;
     font-weight: 600;
   }
+`;
+const Input = styled.div`
+  // border: 3px solid red;
+  border: ${(props) => (props.check ? '3px solid red' : 'none')};
+  position: relative;
+  width: 100%;
+  height: 36px;
+  box-sizing: border-box;
+  > div:nth-of-type(1) {
+    display: ${(props) => (props.value ? 'block' : 'none')};
+    position: absolute;
+    top: 3px;
+    left: 0;
+    font-size: 11px;
+    padding-left: 8px;
+    box-sizing: border-box;
+    color: #8e8e8e;
+  }
+  > div:nth-of-type(2) {
+    // width: 22px;
+    // height: 22px;
+    // border: 3px solid blue;
+    position: absolute;
+    top: 30%;
+    right: 3%;
+  }
+
+  // > img {
+  //   position: absolute;
+  //   right: 5%;
+  //   top: 25%;
+  // }
+  > input {
+    width: 100%;
+    // height: 100%;
+    font-size: ${(props) => (props.value ? '12px' : '16px')};
+    background-color: #fafafa;
+    color: #262626;
+    border: 1px solid #cccccc;
+    padding: ${(props) => (props.value ? '20px 0 7px 8px' : '9px 0 7px 8px')};
+    box-sizing: border-box;
+
+    :focus {
+      outline: none;
+      ::placeholder {
+        opacity: 1;
+      }
+    }
+
+    ::placeholder {
+      font-size: 12px;
+      color: #888888;
+      position: absolute;
+      opacity: 0.5;
+    }
+  }
+  margin-bottom: 8px;
+  // > input:nth-of-type(1),
+  // input:nth-of-type(2),
+  // input:nth-of-type(3) {
+  //   margin-bottom: 8px;
+  // }
 `;
 const Facebook = styled.div`
   display: flex;
@@ -334,5 +513,20 @@ const Img = styled(Image)`
     border: 1px solid red;
     width: 16px;
     height: 16px;
+  }
+`;
+
+const InnerImg = styled(Image)`
+  border: 1px solid red;
+  width: 16px;
+  height: 16px;
+  > img {
+    border: 1px solid red;
+    width: 16px;
+    height: 16px;
+    src: ${(props) =>
+      props.check
+        ? '/static/images/signup/ok.png'
+        : '/static/images/signup/no.png'};
   }
 `;

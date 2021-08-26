@@ -49,6 +49,21 @@ function login(props) {
             <Img src={AppImg2} width={136} height={40} />
           </div>
         </App>
+        <footer>
+          <span>
+            <a target="_blank" href="https://icons8.kr">
+              lcons8
+            </a>
+            에 의한{' '}
+            <a
+              target="_blank"
+              href="https://icons8.kr/icon/AqDEb8mCIrk9/macos-close"
+            >
+              MacOS Close
+            </a>{' '}
+            아이콘
+          </span>
+        </footer>
       </Footer>
     </Container>
   );
@@ -203,6 +218,13 @@ const Footer = styled.div`
     font-size: 14px;
     line-height: 18px;
     color: #262626;
+  }
+  > footer {
+    margin-top: 80px;
+    > span {
+      color: #8e8e8e;
+      font-size: 12px;
+    }
   }
 `;
 
