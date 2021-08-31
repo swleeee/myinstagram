@@ -53,7 +53,7 @@ const db = mysql.createConnection({
   database: 'myinstagram', //위에서 만든 데이터베이스의 이름을 넣는다.
 });
 
-db.connect();
+// db.connect();
 
 app.use(cors());
 
@@ -127,7 +127,7 @@ app.post('/signup', (req, res) => {
       // processResults(rows, fields);
 
       // console.log(results);
-      // console.log(err);
+
       // console.log('aaa');
       if (err) {
         console.log('DB저장 실패');
@@ -141,7 +141,7 @@ app.post('/signup', (req, res) => {
         // db.end();
         res.json({ data: 'success' });
       }
-      db.end();
+      // db.end();
     }
   );
   //   const user_id = req.body.inText;

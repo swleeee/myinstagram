@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import facebookImg from '../../public/static/images/signup/facebook_white.png';
 import AppImg1 from '../../public/static/images/App1.png';
@@ -24,6 +25,8 @@ function signin(props) {
     value : input box에 작성된 text 값
     isValue : 올바르게 작성되었다면 1(true), 아니면 0(false)
   */
+  const router = useRouter();
+  const [checkInput, setCheckInput] = useState(false);
   const [input, setInput] = useState([
     {
       index: 0,
@@ -73,7 +76,7 @@ function signin(props) {
   const existUserId = (asValue) => {
     var regExp = /^[A-Za-z0-9_.+]*$/;
     console.log(regExp.test(asValue));
-    return regExp.test(asValue); // 형식에 맞는 경우 true 리턴
+    return regExp.test(asValue) && asValue; // 형식에 맞는 경우 true 리턴
   };
 
   //비밀번호 체크 정규식
@@ -96,6 +99,8 @@ function signin(props) {
     input.map((item, idx) => {
       if (data.name === item.text) {
         newArray[idx].value = data.value;
+
+        // 유효성 검사
         if (idx === 0) {
           newArray[idx].isValue =
             existCelluar(data.value) || existEmail(data.value);
@@ -106,12 +111,14 @@ function signin(props) {
         } else {
           newArray[idx].isValue = existPassword(data.value);
         }
+
         if (newArray[idx].isValue) {
           newArray[idx].src = '/static/images/signup/ok.png';
         } else {
           newArray[idx].src = '/static/images/signup/no.png';
         }
 
+        checkInputHandler(newArray);
         setInput(newArray);
       } else {
         // setInput(item);
@@ -146,6 +153,32 @@ function signin(props) {
     //   console.log(isUserInfo);
     // }, 3000);
   };
+
+  const checkInputHandler = (ary) => {
+    let isCheck = 0;
+
+    console.log('change Handler');
+    ary.forEach((item) => {
+      if (item.isValue) {
+        console.log('true!!');
+        isCheck++;
+      } else {
+        console.log('false!!');
+        // return;
+      }
+    });
+    console.log(checkInput);
+    console.log(isCheck);
+    if (isCheck === 4) {
+      if (!checkInput) {
+        setCheckInput(true);
+      }
+    } else {
+      if (checkInput) {
+        setCheckInput(false);
+      }
+    }
+  };
   const signupHandler = () => {
     console.log('click');
     // console.log(userInfo);
@@ -171,6 +204,30 @@ function signin(props) {
       userId: input[2].value,
       password: input[3].value,
     };
+
+    fetch('http://localhost:3003/signup', {
+      method: 'POST', //통신방법
+      headers: {
+        'content-type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+      body: JSON.stringify(user),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log('res');
+        console.log(res);
+        if (res.data === 'success') {
+          router.push('/');
+        }
+      })
+      .catch((e) => console.log(e));
+    // .then((json) => {
+    //   console.log(json);
+    //   // this.setState({
+    //   //   text: json.text,
+    //   // });
+    // });
   };
   return (
     <Container>
@@ -192,7 +249,7 @@ function signin(props) {
             <div></div>{' '}
           </Or>
 
-          <Input value={userInfo} check={isUserInfo}>
+          <Input value={input[0].value} check={input[0].isValue ? 1 : 0}>
             <input
               placeholder="휴대폰 번호 또는 이메일 주소"
               name="userInfo"
@@ -202,7 +259,8 @@ function signin(props) {
             <div>휴대폰 번호 또는 이메일 주소</div>
             <div>
               <InnerImg
-                check={isUserInfo}
+                value={input[0].value}
+                check={input[0].isValue}
                 src={input[0].src}
                 width={22}
                 height={22}
@@ -210,7 +268,7 @@ function signin(props) {
             </div>
           </Input>
 
-          <Input value={userName}>
+          <Input value={input[1].value} check={input[1].isValue ? 1 : 0}>
             <input
               placeholder="성명"
               name="userName"
@@ -219,14 +277,15 @@ function signin(props) {
             <div>성명</div>
             <div>
               <InnerImg
-                check={isUserInfo}
+                value={input[1].value}
+                check={input[1].isValue}
                 src={input[1].src}
                 width={22}
                 height={22}
               />
             </div>
           </Input>
-          <Input value={userId}>
+          <Input value={input[2].value} check={input[2].isValue ? 1 : 0}>
             <input
               placeholder="사용자 이름"
               name="userId"
@@ -235,14 +294,15 @@ function signin(props) {
             <div>사용자 이름</div>
             <div>
               <InnerImg
-                check={isUserInfo}
+                value={input[2].value}
+                check={input[2].isValue}
                 src={input[2].src}
                 width={22}
                 height={22}
               />
             </div>
           </Input>
-          <Input value={password}>
+          <Input value={input[3].value} check={input[3].isValue ? 1 : 0}>
             <input
               placeholder="비밀번호"
               name="password"
@@ -252,7 +312,8 @@ function signin(props) {
             <div>비밀번호</div>
             <div>
               <InnerImg
-                check={isUserInfo}
+                value={input[3].value}
+                check={input[3].isValue}
                 src={input[3].src}
                 width={22}
                 height={22}
@@ -260,8 +321,22 @@ function signin(props) {
             </div>
           </Input>
           <SignUp>
-            <Register onClick={() => signupHandler()}>가입</Register>
+            {/* <Link href="/signup" passHref> */}
+            {/* <SignUp href="/signup">가입하기</SignUp> */}
 
+            <Register
+              // href="/signup"
+              check={checkInput}
+              onClick={() => {
+                if (checkInput) {
+                  console.log(checkInput);
+                  signupHandler();
+                }
+              }}
+            >
+              가입
+            </Register>
+            {/* </Link> */}
             {/* <Forget>비밀번호를 잊으셨나요?</Forget> */}
           </SignUp>
         </MainItem>
@@ -341,11 +416,12 @@ const Register = styled.button`
   margin-top: 15px;
   margin-bottom: 20px;
   width: 100%;
-  background-color: #b2dffc;
+  background-color: ${(props) => (props.check ? '#0095f6' : '#b2dffc')};
   color: #ffffff;
   border: none;
   border-radius: 5px;
   height: 30px;
+  font-weight: ${(props) => (props.check ? 'bold' : 'normal')};
 `;
 const Or = styled.div`
   width: 100%;
@@ -371,10 +447,10 @@ const Or = styled.div`
 `;
 const Input = styled.div`
   // border: 3px solid red;
-  border: ${(props) => (props.check ? '3px solid red' : 'none')};
+  // border: ${(props) => (props.check ? '3px solid red' : 'none')};
   position: relative;
   width: 100%;
-  height: 36px;
+  // height: 36px;
   box-sizing: border-box;
   > div:nth-of-type(1) {
     display: ${(props) => (props.value ? 'block' : 'none')};
@@ -393,6 +469,7 @@ const Input = styled.div`
     position: absolute;
     top: 30%;
     right: 3%;
+    display: ${(props) => (props.value ? 'block' : 'none')};
   }
 
   // > img {
@@ -506,22 +583,23 @@ const App = styled.div`
 `;
 
 const Img = styled(Image)`
-  border: 1px solid red;
+  // border: 1px solid red;
   width: 16px;
   height: 16px;
   > img {
-    border: 1px solid red;
+    // border: 1px solid red;
     width: 16px;
     height: 16px;
   }
 `;
 
 const InnerImg = styled(Image)`
-  border: 1px solid red;
+  // border: 1px solid red;
   width: 16px;
   height: 16px;
+
   > img {
-    border: 1px solid red;
+    // border: 1px solid red;
     width: 16px;
     height: 16px;
     src: ${(props) =>
